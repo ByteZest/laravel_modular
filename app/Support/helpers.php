@@ -19,6 +19,7 @@ if (! function_exists('ksuid')) {
      *
      * @param  string  $fullyQualifiedClassName  Fully Qualified Class Name
      * @return string
+     *
      * @see https://github.com/tuupola/ksuid
      */
     function ksuid(string $fullyQualifiedClassName): string

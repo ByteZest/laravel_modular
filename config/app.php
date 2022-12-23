@@ -192,10 +192,13 @@ return [
          */
         \App\Application\Providers\AppServiceProvider::class,
         BlueprintMacrosServiceProvider::class,
+        \App\Filament\Providers\FilamentRouteServiceProvider::class,
 
         /*
          * Domain Service Providers...
          */
+        \App\Domain\Auth\Providers\DomainServiceProvider::class,
+        \App\Domain\Users\Providers\DomainServiceProvider::class,
 
     ],
 

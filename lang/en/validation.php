@@ -142,6 +142,7 @@ return [
     'uppercase' => 'The :attribute must be uppercase.',
     'url' => 'The :attribute must be a valid URL.',
     'uuid' => 'The :attribute must be a valid UUID.',
+    'alpha_num_dash_space' => 'The :attribute may only contain letters, numbers, dashes, spaces and underscores.',
 
     /*
     |--------------------------------------------------------------------------

@@ -64,4 +64,6 @@ return [
         'encrypt_cookies' => \App\Application\Http\Middleware\EncryptCookies::class,
     ],
 
+    'prefix' => 'auth',
+
 ];

@@ -28,7 +28,6 @@ trait HasKsuids
         });
     }
 
-
     /**
      * Generate a new UUID for the model.
      *

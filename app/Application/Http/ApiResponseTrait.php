@@ -8,6 +8,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
 use JsonSerializable;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use Throwable;
 
 trait ApiResponseTrait
 {
@@ -35,6 +36,7 @@ trait ApiResponseTrait
     public function setDefaultSuccessResponse(?array $content = null): self
     {
         $this->_api_helpers_defaultSuccessData = $content ?? [];
+
         return $this;
     }
 
@@ -59,12 +61,24 @@ trait ApiResponseTrait
         );
     }
 
-    public function respondError(?string $message = null): JsonResponse
+    public function respondError(
+        ?string $message = null,
+        Throwable $throwable = null,
+        int $statusCode = SymfonyResponse::HTTP_BAD_REQUEST): JsonResponse
     {
-        return $this->apiResponse(
-            ['error' => $message ?? 'Error'],
-            SymfonyResponse::HTTP_BAD_REQUEST
-        );
+        $payload = [
+            'error' => $message ?? 'Error',
+        ];
+        if ($throwable && app()->environment('develop', 'local')) {
+            $payload['exception'] = [
+                'message' => $throwable->getMessage(),
+                'file' => $throwable->getFile(),
+                'line' => $throwable->getLine(),
+                'trace' => $throwable->getTrace(),
+            ];
+        }
+
+        return $this->apiResponse($payload, $statusCode);
     }
 
     public function respondCreated(array|Arrayable|JsonSerializable|null $data = null): JsonResponse
@@ -81,7 +95,7 @@ trait ApiResponseTrait
     {
         $data = [
             'message' => __('The given data was invalid.'),
-            'errors'  => $exception->validator->errors()->messages(),
+            'errors' => $exception->validator->errors()->messages(),
         ];
 
         return $this->apiResponse(
@@ -89,7 +103,6 @@ trait ApiResponseTrait
             SymfonyResponse::HTTP_UNPROCESSABLE_ENTITY
         );
     }
-
 
     public function respondNoContent(): JsonResponse
     {
@@ -99,11 +112,10 @@ trait ApiResponseTrait
     private function apiResponse(array $data, int $code = 200): JsonResponse
     {
         $responseArr = [
-            'data' => $data
+            'data' => $data,
         ];
 
-        $responseArr['meta']['timestamp'] = intdiv((int)now()->format('Uu'), 1000);
-
+        $responseArr['meta']['timestamp'] = intdiv((int) now()->format('Uu'), 1000);
 
         return response()->json($responseArr, $code);
     }

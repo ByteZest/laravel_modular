@@ -68,9 +68,9 @@ abstract class ServiceProvider extends LaravelServiceProvider
      *
      * @return void
      */
-    public function registerPolicies()
+    public function registerPolicies(): void
     {
-        if ($this->hasPolicies && config('register.policies')) {
+        if ($this->hasPolicies) {
             foreach ($this->policies as $key => $value) {
                 Gate::policy($key, $value);
             }
@@ -82,7 +82,7 @@ abstract class ServiceProvider extends LaravelServiceProvider
      */
     protected function registerCommands()
     {
-        if ($this->hasCommands && config('register.commands')) {
+        if ($this->hasCommands) {
             $this->commands($this->commands);
         }
     }
@@ -94,7 +94,7 @@ abstract class ServiceProvider extends LaravelServiceProvider
      */
     protected function registerMigrations()
     {
-        if ($this->hasMigrations && config('register.migrations')) {
+        if ($this->hasMigrations) {
             $this->loadMigrationsFrom($this->domainPath('Database/Migrations'));
         }
     }
@@ -102,21 +102,22 @@ abstract class ServiceProvider extends LaravelServiceProvider
     /**
      * Detects the domain base path so resources can be proper loaded on child classes.
      *
-     * @param string $append
+     * @param  string|null  $append
      * @return string
+     *
      * @throws \ReflectionException
      */
-    protected function domainPath($append = null): string
+    protected function domainPath(string $append = null): string
     {
         $reflection = new ReflectionClass($this);
 
-        $realPath = realpath(dirname($reflection->getFileName()) . '/../');
+        $realPath = realpath(dirname($reflection->getFileName()).'/../');
 
-        if (!$append) {
+        if (! $append) {
             return $realPath;
         }
 
-        return $realPath . '/' . $append;
+        return $realPath.'/'.$append;
     }
 
     /**
@@ -126,7 +127,7 @@ abstract class ServiceProvider extends LaravelServiceProvider
      */
     protected function registerTranslations()
     {
-        if ($this->hasTranslations && config('register.translations')) {
+        if ($this->hasTranslations) {
             $this->loadJsonTranslationsFrom($this->domainPath('Resources/Lang'));
         }
     }
