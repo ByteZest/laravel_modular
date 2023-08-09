@@ -1,5 +1,6 @@
 <?php
 
+use App\Application\Providers\AdminPanelProvider;
 use App\Application\Providers\BlueprintMacrosServiceProvider;
 use Illuminate\Support\Facades\Facade;
 
@@ -186,6 +187,7 @@ return [
         /*
          * Package Service Providers...
          */
+        AdminPanelProvider::class,
 
         /*
          * Application Service Providers...
